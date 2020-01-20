@@ -1,12 +1,38 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load custom_tags %}
+
 {% block content %}
 
-<div>
-    <a class="Update_post" href="{% url 'post_update' object.id %}"> Update Post</a>
-    <a href="{% url 'post_delete' object.id %}"> Delete Post</a>
-</div>
+<div class="row single-post">
+    <div class="single-post-card view-update {{ object.pk }}">
+        <div class="header">
+            <a href="{% url 'helloworld' %}">
+                {% if object.author.profile_pic %}
+                    <img class="picture-circle--medium" src="/{{object.author.profile_pic}}">
+                {% endif %}
+                {{ object.author.username }}
+            </a>
+        </div>
 
-<p> {{ object.title}} </p>
-<image src="/{{object.image}}">
+        <div class="image__wrapper">
+            <img class="card__main-image" src="/{{object.image}}" width='1000', height='1000'>
+        </div>
+
+        <div class="card__panel-body">
+            <div class="likes">
+                {% if post.get_like_count %}
+                    {{ post.get_like_count }} like{% if post.get_like_count > 1 %}s{% endif %}
+                {% endif %}
+            </div>
+            <section class="input-row">
+                <i class="fa {% has_user_liked_post post user %} submit-like" aria-hidden="true"> </i>
+                <div class=" hidden-data {{ post.pk }}" style="display: none;">
+                    <span class="post-pk">{{ post.pk }}</span>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

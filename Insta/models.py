@@ -46,7 +46,7 @@ class Like(models.Model):
     user = models.ForeignKey(
         InstaUser,
         on_delete = models.CASCADE,
-        related_name='likes'
+        related_name='likes' 
     )
 
     class Meta:

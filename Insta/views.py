@@ -17,10 +17,9 @@ from Insta.models import Post, Like, InstaUser, UserConnection, Comment
 class HelloWorld(TemplateView):
     template_name = 'test.html'
 
-class PostsView(LoginRequiredMixin, ListView):
+class PostsView(ListView):
     model = Post
     template_name = 'index.html'
-    login_url = 'login'
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
@@ -79,6 +78,21 @@ class SignUp(CreateView):
     template_name = 'signup.html'
     success_url = reverse_lazy("login")
 
+class EditProfile(LoginRequiredMixin, UpdateView):
+    model = InstaUser
+    template_name = 'edit_profile.html'
+    fields = ['profile_pic', 'username']
+    login_url = 'login'
+
+
+
+class ExploreView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'explore.html'
+    login_url = 'login'
+
+    def get_queryset(self):
+        return Post.objects.all().order_by('-posted_on')[:20]
 
 @ajax_request
 def addLike(request):
@@ -98,12 +112,6 @@ def addLike(request):
         'post_pk': post_pk
     }
 
-
-class EditProfile(LoginRequiredMixin, UpdateView):
-    model = InstaUser
-    template_name = 'edit_profile.html'
-    fields = ['profile_pic', 'username']
-    login_url = 'login'
 
 @ajax_request
 def toggleFollow(request):
